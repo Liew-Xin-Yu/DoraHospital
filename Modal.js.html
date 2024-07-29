@@ -1,0 +1,19 @@
+<script type="text/babel">
+    const Modal = ({ isVisible, onClose, children }) => {
+      if (!isVisible) return null;
+  
+      return (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-4 rounded shadow-lg relative">
+            <button
+              onClick={onClose}
+              className="absolute top-0 right-0 mt-2 mr-2 text-black font-bold"
+            >
+              &times;
+            </button>
+            {children}
+          </div>
+        </div>
+      );
+    };
+  </script>

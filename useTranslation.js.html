@@ -1,0 +1,22 @@
+<!-- useTranslation.js.html -->
+
+
+<script type="text/babel">
+    const useTranslation = () => {
+      const i18n = window['i18next'];
+      const { useTranslation: originalUseTranslation } = window['reactI18next'];
+  
+      if (!originalUseTranslation || !i18n) {
+        console.error("i18next or react-i18next did not load correctly");
+        return {
+          t: (key) => key,
+          i18n: null,
+        };
+      }
+  
+      return originalUseTranslation();
+    };
+  
+    window.useTranslation = useTranslation;
+  </script>
+  
