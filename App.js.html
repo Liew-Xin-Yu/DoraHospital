@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <title>Login</title>
+  <script src="https://unpkg.com/react/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div id="app-root"></div>
+  <script type="text/babel">
+    const { useState } = React;
+
+    const Login = ({ onLogin }) => {
+      const [email, setEmail] = useState('');
+      const [password, setPassword] = useState('');
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        google.script.run.withSuccessHandler(onLogin).loginUser(email, password);
+      };
+
+      return (
+        <div>
+          <h1>Login</h1>
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label>Email:</label>
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            </div>
+            <div>
+              <label>Password:</label>
+              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+            </div>
+            <button type="submit">Login</button>
+          </form>
+        </div>
+      );
+    };
+
+    const DoctorDashboard = ({ user }) => (
+      <div>
+        <h1>Hi Dr.</h1>
+        <p>Welcome, Dr. {user.name}!</p>
+      </div>
+    );
+
+    const PatientDashboard = () => (
+      <div>
+        <Navbar />
+        <Sidenav />
+        <div className="flex h-auto bg-gray-100 p-8 gap-8">
+          <div className="w-2/5 pr-4">
+            <Scorecard />
+          </div>
+          <div className="w-3/5 space-y-8">
+            <div>
+              <h2 className="text-2xl font-bold text-right py-2">Next Appointment</h2>
+              <div className="bg-primary text-white p-4 rounded-lg shadow-md">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h3 className="text-2xl font-bold">Tomorrow</h3>
+                    <p>11 January 2019, 10:00 AM</p>
+                  </div>
+                  <div>
+                    <svg className="w-10 h-10 rounded-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19 4h-1V2h-2v2H8V2H6v2H5C3.9 4 3 4.9 3 6v14c0 1.1 0.9 2 2 2h14c1.1 0 2-0.9 2-2V6c0-1.1-0.9-2-2-2zm0 16H5V9h14v11zM7 11h5v5H7v-5z"></path>
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex items-center mt-4">
+                  <img src="doctor-image.png" alt="Doctor" className="w-12 h-12 rounded-full mr-4" />
+                  <div>
+                    <p className="font-bold">Tawfiq Bahri</p>
+                    <p className="text-sm">Family Doctor, Cardiologist</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="paper-card">
+              <div className="grid grid-cols-1 gap-4">
+                <h2 className="text-2xl font-bold">Not Sure What To Put Here Yet</h2>
+                <div className="gap-4">
+                  <button className="mt-4 bg-accent text-white py-2 px-4 rounded">
+                    Hello World
+                  </button>
+                  <button className="mt-4 bg-primary text-white py-2 px-4 rounded" onClick={() => window.location.hash = '/profile'}>
+                    Login
+                  </button>
+                  <button className="mt-4 error-button">
+                    Secondary Action
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <Booking />
+        <History />
+        <Footer />
+      </div>
+    );
+
+    const App = () => {
+      const [user, setUser] = useState(null);
+
+      const handleLogin = (user) => {
+        if (user) {
+          setUser(user);
+        } else {
+          alert('Invalid login');
+        }
+      };
+
+      if (!user) {
+        return <Login onLogin={handleLogin} />;
+      }
+
+      return user.role === 'doctor' ? (
+        <DoctorDashboard user={user} />
+      ) : (
+        <PatientDashboard />
+      );
+    };
+
+    ReactDOM.render(<App />, document.getElementById('app-root'));
+  </script>
+</body>
+</html>
