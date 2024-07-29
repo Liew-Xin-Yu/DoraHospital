@@ -1,0 +1,48 @@
+<!-- i18nInit.js.html -->
+
+
+<script type="text/babel">
+    document.addEventListener('DOMContentLoaded', function () {
+      const i18n = window['i18next'];
+      const reactI18next = window['reactI18next'];
+  
+      if (reactI18next && i18n) {
+        const { initReactI18next } = reactI18next;
+        i18n.use(initReactI18next).init({
+          resources: {
+            en: {
+              translation: {
+                home: "Home",
+                profile: "Profile",
+                faq: "FAQ",
+                legalLink: "Legal link"
+              }
+            },
+            cn: {
+              translation: {
+                home: "主页",
+                profile: "个人资料",
+                faq: "常见问题",
+                legalLink: "法律链接"
+              }
+            }
+          },
+          lng: "en", // default language
+          fallbackLng: "en",
+          interpolation: {
+            escapeValue: false
+          }
+        });
+  
+        const changeLanguage = (lng) => {
+          i18n.changeLanguage(lng);
+        };
+  
+        window.changeLanguage = changeLanguage;
+        console.log('i18next initialized');
+      } else {
+        console.error('i18next or react-i18next did not load correctly');
+      }
+    });
+  </script>
+  

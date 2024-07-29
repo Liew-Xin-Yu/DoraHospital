@@ -1,0 +1,16 @@
+<!-- Router.js.html -->
+<script type="text/babel">
+    const { HashRouter, Route, Switch } = ReactRouterDOM;
+  
+    const AppRouter = () => (
+      <HashRouter>
+        <Switch>
+          <Route path="/profile" component={Profile} />
+          <Route exact path="/" component={App} />
+        </Switch>
+      </HashRouter>
+    );
+  
+    ReactDOM.render(<AppRouter />, document.getElementById('root'));
+  </script>
+  

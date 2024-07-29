@@ -1,0 +1,46 @@
+<script type="text/babel">
+const Scorecard = ({ user }) => {
+
+  return (
+    <>
+        <div id="basic-form" className="paper-card h-auto">
+          <div className="card-content text-center">
+            <div className="flex justify-center mb-3">
+              <img
+                src={user.img}
+                className="w-36 h-36 rounded-full object-cover shadow-md"
+                alt="User Img"
+              />
+            </div>
+            <div className="text-xl font-semibold">{user.name}</div>
+            <div className="text-gray-600 mb-4">{user.email}</div>
+
+            <div className="mb-4">
+              <div className="flex justify-between mb-2">
+                <h6 className="text-gray-500">Mobile Number</h6>
+                <h5>{user.mobileNo}</h5>
+              </div>
+              <div className="flex justify-between mb-2">
+                <h6 className="text-gray-500">Gender</h6>
+                <h5>{user.gender}</h5>
+              </div>
+              <div className="flex justify-between mb-2">
+                <h6 className="text-gray-500">IC Number</h6>
+                <h5>{user.icNum}</h5>
+              </div>
+              <div className="flex justify-between mb-2">
+                <h6 className="text-gray-500">Messages</h6>
+                <h5>{user.messages?.length}</h5>
+              </div>
+              <div className="flex justify-between mb-2">
+                <h6 className="text-gray-500">Agenda</h6>
+                <h5>{user.agenda?.length}</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+
+    </>
+  );
+};
+</script>

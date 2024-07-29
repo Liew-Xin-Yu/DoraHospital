@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <title>Login</title>
+  <script src="https://unpkg.com/react/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+     body {
+      font-family: Arial, sans-serif;
+    }
+    
+  </style>
+</head>
+<body>
+  <div id="app-root"></div>
+  <?!= include('tailwind-theme.js.html') ?>
+  <?!= include('Store.js.html') ?>
+  <?!= include('Scorecard.js.html') ?>
+  <?!= include('Navbar.js.html') ?>
+  <?!= include('Sidenav.js.html') ?>
+  <?!= include('head.html') ?>
+  <?!= include('i18nInit.js.html') ?> 
+  <?!= include('useTranslation.js.html') ?> 
+  <?!= include('SkeletonLoaders.js.html') ?>
+  <?!= include('Booking.js.html') ?>
+  <?!= include('History.js.html') ?>
+  <?!= include('Footer.js.html') ?>
+    <?!= include('Feedback.js.html') ?>
+  <?!= include('App.js.html') ?>
+  <?!= include('profile.js.html') ?>
+  <?!= include('SignUp.js.html') ?>
+  <?!= include('PatientDatabase.html') ?>
+  <?!= include('ItemList.html') ?>
+  <?!= include('Modal.js.html') ?>
+   
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const Login = ({ onLogin, onToggleSignUp }) => {
+      const [email, setEmail] = useState('');
+      const [password, setPassword] = useState('');
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        google.script.run.withSuccessHandler(onLogin).loginUser(email, password);
+      };
+
+      return (
+                   <div className="outer-container">
+       <div className="login-container">
+          <h1>Dora Hospital</h1>
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label>Email</label>
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            </div>
+            <div>
+              <label>Password</label>
+              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+            </div>
+            <button type="submit">Login</button>
+          </form>
+    <div className="sign-up">
+  <a href="#" onClick={(e) => {
+    e.preventDefault();
+    onToggleSignUp(); 
+  }}>Sign Up?</a>
+</div>
+
+         </div>       
+        </div>
+      );
+    };
+
+ const DoctorDashboard = ({ user, onLogout }) => {
+      const [view, setView] = useState('dashboard'); // 'dashboard' or 'itemlist'
+      
+      const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+  };
+      return (
+        <div>
+          <Navbar onLogout={onLogout} />
+          <Sidenav user={user} />
+
+          <div className="flex h-auto bg-gray-100 p-8 gap-8">
+            <div className="w-2/5 pr-4">
+              <h2 className="text-3xl font-bold mb-6 text-center text-gray-800 mb-4">
+                Welcome, Dr. {user.name}!
+              </h2>
+              <Scorecard user={user}/>
+            </div>
+    
+             <div className="paper-card">
+              <div className="grid grid-cols-1 gap-4">
+                <h2 className="text-2xl font-bold">What Would You Like to Do Next?</h2>
+                <div className="gap-4">
+             
+            <button onClick={handleOpenModal} className="bg-blue-500 text-white p-2 rounded">
+              Add Prescription
+            </button>
+
+                </div>
+              </div>
+            </div>
+                </div>
+            <Modal isVisible={isModalVisible} onClose={handleCloseModal}>
+              <h3 className="text-xl font-bold mb-4">Prescription List</h3>
+              <ItemList />
+            </Modal>
+
+          <Footer />
+        </div>
+      );
+    };
+
+
+    const PatientDashboard = ({ user, onLogout,onToggleFeedback,onBooking }) => (
+      <div>
+        <Navbar onLogout={onLogout} />
+      <Sidenav user={user}  onToggleFeedback={onToggleFeedback}/>
+        <div className="flex h-auto bg-gray-100 p-8 gap-8">
+          <div className="w-2/5 pr-4">
+            <Scorecard user={user}/>
+          </div>
+          <div className="w-3/5 space-y-8">
+            <div>
+              <h2 className="text-2xl font-bold text-right py-2">Next Appointment</h2>
+              <div className="bg-primary text-white p-4 rounded-lg shadow-md">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h3 className="text-2xl font-bold">Tomorrow</h3>
+                    <p>11 January 2019, 10:00 AM</p>
+                  </div>
+                  <div>
+                    <svg className="w-10 h-10 rounded-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19 4h-1V2h-2v2H8V2H6v2H5C3.9 4 3 4.9 3 6v14c0 1.1 0.9 2 2 2h14c1.1 0 2-0.9 2-2V6c0-1.1-0.9-2-2-2zm0 16H5V9h14v11zM7 11h5v5H7v-5z"></path>
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex items-center mt-4">
+                  <img src="doctor-image.png" alt="Doctor" className="w-12 h-12 rounded-full mr-4" />
+                  <div>
+                    <p className="font-bold">Tawfiq Bahri</p>
+                    <p className="text-sm">Family Doctor, Cardiologist</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="paper-card">
+              <div className="grid grid-cols-1 gap-4">
+                <h2 className="text-2xl font-bold">What Would You Like to Do Next?</h2>
+                <div className="gap-4">
+                  <button className="mt-4 bg-accent text-white py-2 px-4 rounded">
+                    Hello World
+                  </button>
+                  <button className="mt-4 bg-primary text-white py-2 px-4 rounded" onClick={() => window.location.hash = '/profile'}>
+                    Login
+                  </button>   
+                  <a href="#" onClick={(e) => {
+    e.preventDefault();
+    onToggleFeedback(); 
+  }}>Feedback</a>
+                 <button className="mt-4 bg-secondary text-white py-2 px-4 rounded">
+                Feedback
+               
+              </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <Booking onBooking={onBooking} />
+        <History />        
+        <Feedback/>
+
+        <Footer />
+      </div>
+    );
+
+   const App = () => {
+      const [state, dispatch] = useStore();
+      const [user, setUser] = useState(null);
+      const [isSignUp, setIsSignUp] = useState(false)
+      const handleLogin = (user) => {
+        if (user) {
+          dispatch({ type: SET_STORE, payload: user });
+          setUser(user);
+        } else {
+          alert('Invalid login');
+        }
+      };
+
+      const toggleSignUp = () => {
+        setIsSignUp(!isSignUp);
+      };
+
+
+      const handleLogout = () => {
+        setUser(null);
+        dispatch({ type: SET_STORE, payload: null });
+      };
+
+
+ const handleSignUp = (user) => {
+    setUser(user);
+    dispatch({ type: SET_STORE, payload: user });
+    setIsSignUp(false);
+    alert('Sign Up Successful');
+  };
+
+const handleBooking = (bookingData) => {
+  alert('Booking Successful');
+};
+
+
+  useEffect(() => {
+    if (user) {
+      google.script.run.withSuccessHandler((data) => {
+        dispatch({ type: SET_STORE, payload: data });
+      }).getUserInfo();
+    }
+  }, [user]);
+
+
+  if (!user) {
+    if (isSignUp) {
+      return <SignUp onToggleSignUp={toggleSignUp} onSignUp={handleSignUp} />;
+    }
+
+    return <Login onLogin={handleLogin} onToggleSignUp={toggleSignUp} />;
+  }
+
+      return user.role === 'doctor' ? (
+        <DoctorDashboard user={user} onLogout={handleLogout}  />
+      ) : (
+        <PatientDashboard user={user} onLogout={handleLogout} onBooking={handleBooking}/>
+      );
+    };
+
+    ReactDOM.render(<App />, document.getElementById('app-root'));
+  </script>
+</body>
+</html>

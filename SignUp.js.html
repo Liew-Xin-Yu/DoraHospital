@@ -1,0 +1,79 @@
+<script type="text/babel">
+    const SignUp = ({ onToggleSignUp, onSignUp }) => {
+      const [form, setForm] = useState({
+        name: '',
+        email: '',
+        role: '',
+        password: '',
+        mobileNo: '',
+        icNum: ''
+      });
+    
+      const handleChange = (e) => {
+        const { name, value } = e.target;
+        setForm({ ...form, [name]: value });
+      };
+    
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        google.script.run.withSuccessHandler((result) => {
+          if (result && result.success) {
+            onSignUp(form); // Pass the form data to onSignUp
+          } else {
+            alert(result.message || 'An error occurred during sign-up');
+          }
+        }).signUpUser(form);
+      };
+    
+      return (
+        <div className="outer-container">
+          <div className="login-container">
+            <h1>Sign Up</h1>
+            <form onSubmit={handleSubmit}>
+              <div>
+                <label>Name</label>
+                <input type="text" name="name" value={form.name} onChange={handleChange} required />
+              </div>
+              <div>
+                <label>Email</label>
+                <input type="email" name="email" value={form.email} onChange={handleChange} required />
+              </div>
+              <div>
+                <label>Role</label>
+                <div className="radio-group">
+                  <label>
+                    <input type="radio" name="role" value="doctor" checked={form.role === 'doctor'} onChange={handleChange} required />
+                    Doctor
+                  </label>
+                  <label>
+                    <input type="radio" name="role" value="patient" checked={form.role === 'patient'} onChange={handleChange} required />
+                    Patient
+                  </label>
+                </div>
+              </div>
+              <div>
+                <label>Password</label>
+                <input type="password" name="password" value={form.password} onChange={handleChange} required />
+              </div>
+              <div>
+                <label>Mobile Number</label>
+                <input type="text" name="mobileNo" value={form.mobileNo} onChange={handleChange} required />
+              </div>
+              <div>
+                <label>IC Number</label>
+                <input type="text" name="icNum" value={form.icNum} onChange={handleChange} required />
+              </div>
+              <button type="submit">Sign Up</button>
+            </form>
+            <div className="sign-up">
+              <a href="#" onClick={(e) => {
+                e.preventDefault();
+                onToggleSignUp();
+              }}>Back to Login</a>
+            </div>
+          </div>
+        </div>
+      );
+    };
+    </script>
+    
