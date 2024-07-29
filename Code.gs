@@ -141,7 +141,34 @@ const userBooking = (form) => {
   const data = bookingSheet.getDataRange().getValues();
   const lastRow = data.length;
   const lastID = lastRow > 1 ? data[lastRow - 1][0] : 0;
-  const newID = lastID + 1;
+  const incrementID = (lastID) => {
+  // Extract prefix and numeric part
+    const prefix = lastID.match(/[A-Z]+/)[0]; // Extracts the alphabet part
+    const numericPart = lastID.match(/\d+$/)[0]; // Extracts the numeric part
+
+  // Convert numeric part to number, increment it, and format with leading zeros
+    const newNumericPart = (parseInt(numericPart, 10) + 1).toString().padStart(numericPart.length, '0');
+
+  // Return the new ID
+    return prefix + newNumericPart;
+    };
+  const newID = incrementID(lastID);
+
+  switch(form.selectDoctor) {
+    case 'Alice Brown':
+      room = 'R001';
+      break;
+    case 'Robert Johnson':
+      room = 'R002';
+      break;
+    case 'Emily Davis':
+      room = 'R003';
+      break;
+    default:
+      room = 'Unknown';
+      break;
+  }
+
   let email = form.email;
   let title = "Appointment";
   let startDate = form.date;
@@ -150,6 +177,8 @@ const userBooking = (form) => {
   let startDateTime = new Date(startDate + "T" + startTime);
   let endDateTime = new Date(startDateTime);
   endDateTime.setHours(startDateTime.getHours() + 1);
+
+  let body = 'Dear ' + form.name + ',\n\nYour appointment has been scheduled with ' + form.selectDoctor + '.\n\nAppointment Date: ' + form.date + '\nAppointment Time: ' + form.time + '\nVenue: ' + room + ' in Dora Hospital\n\nThank you,\nDora Hospital';
 
   try {
     let calendar = CalendarApp.getCalendarById(email);
@@ -168,9 +197,12 @@ const userBooking = (form) => {
     Logger.log(`Error creating event: ${error.message}`);
   }
 
+  MailApp.sendEmail(email, title, body);
+
   bookingSheet.appendRow([newID, form.name, form.email, form.mobileNo, form.symptoms, form.date, form.time, form.selectDoctor]);
   return { success: true, message: 'Booking successful' };
 };
+
 
 
 
