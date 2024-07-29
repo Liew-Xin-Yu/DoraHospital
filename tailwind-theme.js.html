@@ -1,0 +1,179 @@
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<style>
+  /* Custom Global Styles */
+  .footer-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .flex-links {
+    display: flex;
+    gap: 1rem;
+  }
+  .error-button {
+    background-color: #e53e3e; /* Tailwind class bg-red-500 */
+    color: #fff; /* Tailwind class text-white */
+    padding: 0.5rem 1rem; /* Tailwind class py-2 px-4 */
+    border-radius: 0.25rem; /* Tailwind class rounded */
+  }
+
+  .bg-primary {
+    background-color: #1E90FF; /* Dodger Blue */
+  }
+  .bg-secondary {
+    background-color: #87CEFA; /* Light Sky Blue */
+  }
+  .bg-accent {
+    background-color: #32CD32; /* Lime Green */
+  }
+  .text-primary {
+    color: #1E90FF; /* Dodger Blue */
+  }
+  .text-secondary {
+    color: #87CEFA; /* Light Sky Blue */
+  }
+  .text-accent {
+    color: #32CD32; /* Lime Green */
+  }
+  .text-gray {
+    color: #6B7280; /* Tailwind class text-gray-500 */
+  }
+  .divider {
+    border-color: #6B7280; /* Tailwind class border-gray-500 */
+  }
+  .paper-card {
+    background-color: #fff; /* White */
+    padding: 2rem; /* Tailwind class p-8 */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Tailwind class shadow-lg */
+    border-radius: 0.5rem; /* Tailwind class rounded-lg */
+    border-color: #6B7280; /* Tailwind class border-gray-500 */
+  }
+
+
+    .status-done {
+      background-color: #32CD32; /* Lime Green */
+      color: white;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+    }
+    .status-pending {
+      background-color: #FFA500; /* Orange */
+      color: white;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+    }
+        .outer-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      width: 100vw;
+    }
+
+  .login-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;    max-width: 400px;
+
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      text-align: center;
+    }
+    .login-container h1 {
+      margin-bottom: 2rem;
+      color: #3a86ff;
+    }
+    .login-container form {
+      display: flex;
+      flex-direction: column;
+    }
+    .login-container label {
+      text-align: left;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+    .login-container input {
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    .login-container button {
+      background: linear-gradient(135deg, #3a86ff 0%, #8338ec 100%);
+      color: white;
+      border: none;
+      padding: 0.75rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .login-container button:hover {
+      background: linear-gradient(135deg, #8338ec 0%, #3a86ff 100%);
+    }
+    .login-container .sign-up {
+      margin-top: 1rem;
+    }
+    .login-container .sign-up a {
+      color: #3a86ff;
+      text-decoration: none;
+    }
+
+.radio-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+.radio-group label {
+  display: flex;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b6b6b;
+}
+
+.radio-group input[type="radio"] {
+  appearance: none;
+  width: 7px;
+  height: 7px;
+  border: 1px solid #6200ea;
+  border-radius: 50%;
+  outline: none;
+  transition: all 0.3s ease;
+  position: relative;
+  opacity:1;
+  
+}
+
+.radio-group input[type="radio"]:checked::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #6200ea;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+    opacity:1;
+}
+
+.radio-group input[type="radio"]:focus {
+  box-shadow: 0 0 0 2px rgba(98, 0, 234, 0.3);
+}
+  button {
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    background-color: #32CD32; /* Lime Green */
+    color: #fff;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+  button:hover,
+  button:focus {
+    background-color: #28a745; /* Slightly darker shade for hover and focus */
+    transition: background-color 0.3s, transform 0.3s;
+    transform: scale(1.05); /* Slightly scale up on hover and focus */
+  }
+
+</style>
