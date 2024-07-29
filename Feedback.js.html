@@ -1,0 +1,90 @@
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    const Feedback = ({ onToggleFeedback }) => {
+      const [feedback, setFeedback] = useState({
+        doctorName: '',
+        rating: '5',
+        comment: ''
+      });
+
+      const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFeedback(prev => ({ ...prev, [name]: value }));
+      };
+
+      const handleSubmit = (event) => {
+        event.preventDefault();
+        google.script.run.withSuccessHandler((result) => {
+          if (result && result.success) {
+            alert('Feedback submitted successfully');
+            setFeedback({ doctorName: '', rating: '', comment: '' }); // Reset form
+            onToggleFeedback(false); // Assuming you pass a function to toggle feedback visibility
+          } else {
+            alert(result.message || 'An error occurred during feedback submission');
+          }
+        }).userFeedback(feedback);
+      };
+
+      return (
+    <div className="flex h-auto bg-gray-100">
+      <div className="flex-grow px-8 pb-8">
+        <div className="paper-card">
+            <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Doctor Feedback</h2>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-6">
+                <label className="block text-gray-700 font-semibold">Doctor's Name</label>
+                <input
+                  type="text"
+                  name="doctorName"
+                  value={feedback.doctorName}
+                  onChange={handleChange}
+                  className="w-full p-3 border border-gray-300 rounded mt-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                  required
+                />
+              </div>
+           <div className="mb-6">
+                <label className="block text-gray-700 font-semibold">Rating (1-5)</label>
+                <div className="radio-group">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <label key={star} className="items-center mr-10px">
+                      <input
+                        type="radio"
+                        name="rating"
+                        value={star}
+                        checked={feedback.rating == star}
+                        onChange={handleChange}
+                        required
+                      />
+                      {star} Star
+                    </label>
+                  ))}
+                </div>
+              </div>
+              <div className="mb-6">
+                <label className="block text-gray-700 font-semibold">Comment</label>
+                <textarea
+                  name="comment"
+                  value={feedback.comment}
+                  onChange={handleChange}
+                  className="w-full p-3 border border-gray-300 rounded mt-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                  required
+                  rows="5"  
+                />
+              </div>
+              <div className="text-center">
+                <button type="submit" className="bg-primary text-white py-3 px-6 rounded-lg font-semibold hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary transition duration-300">
+                  Submit Feedback
+                </button>
+              </div>
+            </form>
+          </div>       
+          </div>
+        </div>
+      );
+    };
+
+    ReactDOM.render(<Feedback />, document.getElementById('app-root'));
+  </script>
+
