@@ -1,106 +1,107 @@
 <script type="text/babel">
-const Booking = ({ onBooking }) => {
-  const today = new Date().toISOString().substr(0, 10);
-  const [symptom, setSymptom] = React.useState("Chest Pain");
-  const [doctor, setDoctor] = React.useState("Alice Brown");
-
-  const handleSymptomChange = (event) => {
-    const selectedSymptom = event.target.value;
-    setSymptom(selectedSymptom);
-
-    switch (selectedSymptom) {
-      case "Chest Pain":
-        setDoctor("Alice Brown");
-        break;
-      case "Wheezing":
-        setDoctor("Robert Johnson");
-        break;
-      case "Headache":
-        setDoctor("Emily Davis");
-        break;
-      default:
-        setDoctor("Select a doctor");
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const data = {
-      name: document.getElementById('Name').value,
-      email: document.getElementById('Email').value,
-      mobileNo: document.getElementById('MobileNumber').value,
-      symptoms: symptom,
-      date: document.getElementById('Date').value,
-      time: document.getElementById('Time').value,
-      selectDoctor: doctor
-    };
-    google.script.run.withSuccessHandler((result) => {
-      if (result && result.success) {
-        onBooking(data); // Call onBooking function
-      } else {
-        alert(result.message || 'An error occurred during booking');
+  const Booking = ({ onBooking }) => {
+    const today = new Date().toISOString().substr(0, 10);
+    const [symptom, setSymptom] = React.useState("Chest Pain");
+    const [doctor, setDoctor] = React.useState("Alice Brown");
+  
+    const handleSymptomChange = (event) => {
+      const selectedSymptom = event.target.value;
+      setSymptom(selectedSymptom);
+  
+      switch (selectedSymptom) {
+        case "Chest Pain":
+          setDoctor("Alice Brown");
+          break;
+        case "Wheezing":
+          setDoctor("Robert Johnson");
+          break;
+        case "Headache":
+          setDoctor("Emily Davis");
+          break;
+        default:
+          setDoctor("Select a doctor");
       }
-    }).userBooking(data);
-  };
-
-  return (
-    <div className="flex h-auto bg-gray-100">
-      <div className="flex-grow px-8 pb-8">
-        <div className="paper-card">
-          <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Book an Appointment</h2>
-          <form id="bookingForm" onSubmit={handleSubmit}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label className="block text-gray-700 font-semibold">Name</label>
-                <input type="text" id="Name" className="w-full p-3 border border-gray-300 rounded mt-2 focus:outline-none focus:ring-2 focus:ring-primary bg-gray-100" required />
-              </div>
-              <div>
-                <label className="block text-gray-700 font-semibold">Email</label>
-                <input type="email" id="Email" className="w-full p-3 border border-gray-300 rounded mt-2 focus:outline-none focus:ring-2 focus:ring-primary bg-gray-100" required />
-              </div>
-              <div>
-                <label className="block text-gray-700 font-semibold">Mobile Number</label>
-                <input type="tel" id="MobileNumber" className="w-full p-3 border border-gray-300 rounded mt-2 focus:outline-none focus:ring-2 focus:ring-primary bg-gray-100" required />
-              </div>
-              <div>
-                <label className="block text-gray-700 font-semibold">Symptoms</label>
-                <div className="radio-group">
-                  <label  className="flex items-center">
-                    <input type="radio" name="symptom" value="Chest Pain" checked={symptom === 'Chest Pain'} onChange={handleSymptomChange} required />
-                    Chest Pain
-                  </label>
-                  <label  className="flex items-center">
-                    <input type="radio" name="symptom" value="Wheezing" checked={symptom === 'Wheezing'} onChange={handleSymptomChange} required />
-                    Wheezing
-                  </label>
-                  <label  className="flex items-center">
-                    <input type="radio" name="symptom" value="Headache" checked={symptom === 'Headache'} onChange={handleSymptomChange} required />
-                    Headache
-                  </label>
+    };
+  
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      const data = {
+        name: document.getElementById('Name').value,
+        email: document.getElementById('Email').value,
+        mobileNo: document.getElementById('MobileNumber').value,
+        symptoms: symptom,
+        date: document.getElementById('Date').value,
+        time: document.getElementById('Time').value,
+        selectDoctor: doctor
+      };
+      google.script.run.withSuccessHandler((result) => {
+        if (result && result.success) {
+          onBooking(data); // Call onBooking function
+        } else {
+          alert(result.message || 'An error occurred during booking');
+        }
+      }).userBooking(data);
+    };
+  
+    return (
+      <div className="flex h-auto bg-gray-100">
+        <div className="flex-grow px-8 pb-8">
+          <div className="paper-card">
+            <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Book an Appointment</h2>
+            <form id="bookingForm" onSubmit={handleSubmit}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                  <label className="block text-gray-700 font-semibold">Name</label>
+                  <input type="text" id="Name" className="w-full p-3 border border-gray-300 rounded mt-2 focus:outline-none focus:ring-2 focus:ring-primary bg-gray-100" required />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-semibold">Email</label>
+                  <input type="email" id="Email" className="w-full p-3 border border-gray-300 rounded mt-2 focus:outline-none focus:ring-2 focus:ring-primary bg-gray-100" required />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-semibold">Mobile Number</label>
+                  <input type="tel" id="MobileNumber" className="w-full p-3 border border-gray-300 rounded mt-2 focus:outline-none focus:ring-2 focus:ring-primary bg-gray-100" required />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-semibold">Symptoms</label>
+                  <div className="radio-group">
+                    <label  className="flex items-center">
+                      <input type="radio" name="symptom" value="Chest Pain" checked={symptom === 'Chest Pain'} onChange={handleSymptomChange} required />
+                      Chest Pain
+                    </label>
+                    <label  className="flex items-center">
+                      <input type="radio" name="symptom" value="Wheezing" checked={symptom === 'Wheezing'} onChange={handleSymptomChange} required />
+                      Wheezing
+                    </label>
+                    <label  className="flex items-center">
+                      <input type="radio" name="symptom" value="Headache" checked={symptom === 'Headache'} onChange={handleSymptomChange} required />
+                      Headache
+                    </label>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-semibold">Date</label>
+                  <input type="date" id="Date" value={today} className="w-full p-3 border border-gray-300 rounded mt-2 focus:outline-none focus:ring-2 focus:ring-primary" required />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-semibold">Time</label>
+                  <input type="time" id="Time" className="w-full p-3 border border-gray-300 rounded mt-2 focus:outline-none focus:ring-2 focus:ring-primary" required />
                 </div>
               </div>
-              <div>
-                <label className="block text-gray-700 font-semibold">Date</label>
-                <input type="date" id="Date" value={today} className="w-full p-3 border border-gray-300 rounded mt-2 focus:outline-none focus:ring-2 focus:ring-primary" required />
+              <div className="mb-6">
+                <label className="block text-gray-700 font-semibold">Select Doctor</label>
+                <input type="text" id="SelectDoctor" value={doctor} className="w-full p-3 border border-gray-300 rounded mt-2 focus:outline-none focus:ring-2 focus:ring-primary" readOnly />
               </div>
-              <div>
-                <label className="block text-gray-700 font-semibold">Time</label>
-                <input type="time" id="Time" className="w-full p-3 border border-gray-300 rounded mt-2 focus:outline-none focus:ring-2 focus:ring-primary" required />
+              <div className="text-center">
+                <button type="submit" className="bg-primary text-white py-3 px-6 rounded-lg font-semibold hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary transition duration-300">
+                  Book Now
+                </button>
               </div>
-            </div>
-            <div className="mb-6">
-              <label className="block text-gray-700 font-semibold">Select Doctor</label>
-              <input type="text" id="SelectDoctor" value={doctor} className="w-full p-3 border border-gray-300 rounded mt-2 focus:outline-none focus:ring-2 focus:ring-primary" readOnly />
-            </div>
-            <div className="text-center">
-              <button type="submit" className="bg-primary text-white py-3 px-6 rounded-lg font-semibold hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary transition duration-300">
-                Book Now
-              </button>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
-  );
-};
-</script>
+    );
+  };
+  </script>
+  

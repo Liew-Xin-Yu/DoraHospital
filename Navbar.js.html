@@ -1,18 +1,18 @@
 <script type="text/babel">
-    const Navbar = ({onLogout}) => {
-      return (
-        <nav className="bg-primary flex justify-between">
-          <div className="nav-wrapper">
-            <span href="#" style={{cursor: 'pointer'}} data-target="slide-out" className="sidenav-trigger">
-              <i className="material-icons">menu</i>
-            </span>
-                  <span className="ml-2 text-white font-bold">Dora Hospital</span>
-          </div>
-    <button onClick={onLogout} className="my-2 bg-accent text-white py-2 px-4 rounded flex justify-center items-center">
-              Logout
-            </button>
-        </nav>
-      );
-    };
-    </script>
-    
+  const Navbar = ({onLogout}) => {
+    return (
+      <nav className="bg-primary flex justify-between">
+        <div className="nav-wrapper">
+          <span href="#" style={{cursor: 'pointer'}} data-target="slide-out" className="sidenav-trigger">
+            <i className="material-icons">menu</i>
+          </span>
+                <span className="ml-2 text-white font-bold">Dora Hospital</span>
+        </div>
+  <button onClick={onLogout} className="my-2 bg-accent text-white py-2 px-4 rounded flex justify-center items-center">
+            Logout
+          </button>
+      </nav>
+    );
+  };
+  </script>
+  

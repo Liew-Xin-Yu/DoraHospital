@@ -1,176 +1,179 @@
 <script type="text/babel">
-    const ItemList = () => {
-      const [bookingId, setBookingId] = React.useState('');
-      const [patientName, setPatientName] = React.useState('');
-      const [mobileNo, setMobileNo] = React.useState('');
-      const [prescriptionDate, setPrescriptionDate] = React.useState(new Date().toISOString().substr(0, 10));
-      const [doctorName, setDoctorName] = React.useState('');
-      const [time, setTime] = React.useState('');
-      const [items, setItems] = React.useState([{ pillName: '', quantity: 1, unitPrice: 0, dosage: '', total: 0 }]);
-      const [totalCost, setTotalCost] = React.useState(0);
-      const [bookingIds, setBookingIds] = React.useState([]);
-      const [pillNames, setPillNames] = React.useState([]);
-  
-      React.useEffect(() => {
-        // Calculate total cost whenever items change
-        const total = items.reduce((acc, item) => acc + item.total, 0);
-        setTotalCost(total);
-      }, [items]);
-  
-      React.useEffect(() => {
-        // Fetch all booking IDs and pill names for auto-complete
-        google.script.run.withSuccessHandler(setBookingIds).getAllBookingIds();
-        google.script.run.withSuccessHandler(setPillNames).getAllPillNames();
-      }, []);
-  
-   const handleBookingIdChange = (e) => {
-    const id = e.target.value;
-    setBookingId(id);
-    
-    if (id) {
-      console.log('Entered Booking ID:', id); // Log the entered Booking ID
-  
-      google.script.run.withSuccessHandler((data) => {
-        console.log('Data received for Booking ID:', id); // Log the data received
-        console.log('Patient Name:', data.name); // Log the patient's name
-        console.log('Mobile Number:', data.mobileNo); // Log the mobile number
-        console.log('Prescription Date:', data.date); // Log the prescription date
-        console.log('Time:', data.time); // Log the time
-        console.log('Doctor Name:', data.doctor); // Log the doctor’s name
-  
-        if (data) {
-          setPatientName(data.name || '');
-          setMobileNo(data.mobileNo || '');
-          setPrescriptionDate(data.date || new Date().toISOString().substr(0, 10));
-          setTime(data.time || '');
-          setDoctorName(data.doctor || '');
-        } else {
-          alert('Booking ID not found.');
-        }
-      }).getBookingData(id); // Ensure this function is implemented in Google Apps Script
+  const ItemList = () => {
+    const [bookingId, setBookingId] = React.useState('');
+    const [patientName, setPatientName] = React.useState('');
+    const [mobileNo, setMobileNo] = React.useState('');
+    const [prescriptionDate, setPrescriptionDate] = React.useState(new Date().toISOString().substr(0, 10));
+    const [doctorName, setDoctorName] = React.useState('');
+    const [time, setTime] = React.useState('');
+    const [items, setItems] = React.useState([{ pillName: '', quantity: 1, unitPrice: 0, dosage: '', total: 0 }]);
+    const [totalCost, setTotalCost] = React.useState(0);
+    const [bookingIds, setBookingIds] = React.useState([]);
+    const [pillNames, setPillNames] = React.useState([]);
+
+    React.useEffect(() => {
+      // Calculate total cost whenever items change
+      const total = items.reduce((acc, item) => acc + item.total, 0);
+      setTotalCost(total);
+    }, [items]);
+
+    React.useEffect(() => {
+      // Fetch all booking IDs and pill names for auto-complete
+      google.script.run.withSuccessHandler(setBookingIds).getAllBookingIds();
+      google.script.run.withSuccessHandler(setPillNames).getAllPillNames();
+    }, []);
+
+    const handleBookingIdChange = (e) => {
+  const id = e.target.value.trim();
+  setBookingId(id);
+  if (id) {
+    fetchBookingData(id); // Ensure 'id' is correctly passed here
+  } else {
+    clearBookingData();
+  }
+};
+  const fetchBookingData = (bookingId) => {
+  google.script.run.withSuccessHandler((data) => {
+    console.log(data); // Log the data received
+    if (data) {
+      setPatientName(data.name || '');
+      setMobileNo(data.mobileNo || '');
+      setPrescriptionDate(data.date || new Date().toISOString().substr(0, 10));
+      setTime(data.time || '');
+      setDoctorName(data.doctor || '');
+    } else {
+      alert('Booking ID not found or missing data.');
+      clearBookingData();
     }
-  };
-  
-  
-      const handleItemChange = (index, field, value) => {
-        const updatedItems = [...items];
-        updatedItems[index][field] = value;
-  
-        if (field === 'pillName') {
-          google.script.run.withSuccessHandler((pillData) => {
-            if (pillData) {
-              updatedItems[index].unitPrice = parseFloat(pillData.pricePerPill) || 0;
-              updatedItems[index].dosage = pillData.dosage || '';
-              updatedItems[index].total = updatedItems[index].quantity * updatedItems[index].unitPrice;
-              setItems(updatedItems);
-            } else {
-              updatedItems[index].unitPrice = 0;
-              updatedItems[index].dosage = '';
-              updatedItems[index].total = 0;
-              setItems(updatedItems);
-            }
-          }).getPillData(value);
-        } else if (field === 'quantity') {
-          updatedItems[index].total = updatedItems[index].quantity * updatedItems[index].unitPrice;
-          setItems(updatedItems);
-        }
-      };
-  
-      const addItem = () => {
-        setItems([...items, { pillName: '', quantity: 1, unitPrice: 0, dosage: '', total: 0 }]);
-      };
-  
-      const removeItem = (index) => {
-        const updatedItems = items.filter((_, i) => i !== index);
-        setItems(updatedItems);
-      };
-  
-      const handleSavePrescription = () => {
-        google.script.run.withSuccessHandler((response) => {
-          if (response.success) {
-            alert('Prescription saved successfully!');
+  }).getBookingData(bookingId);
+};
+    const clearBookingData = () => {
+      setPatientName('');
+      setMobileNo('');
+      setPrescriptionDate(new Date().toISOString().substr(0, 10));
+      setTime('');
+      setDoctorName('');
+    };
+
+
+    const handleItemChange = (index, field, value) => {
+      const updatedItems = [...items];
+      updatedItems[index][field] = value;
+
+      if (field === 'pillName') {
+        google.script.run.withSuccessHandler((pillData) => {
+          if (pillData) {
+            updatedItems[index].unitPrice = parseFloat(pillData.pricePerPill) || 0;
+            updatedItems[index].dosage = pillData.dosage || '';
+            updatedItems[index].total = updatedItems[index].quantity * updatedItems[index].unitPrice;
+            setItems(updatedItems);
           } else {
-            alert('Error saving prescription.');
+            updatedItems[index].unitPrice = 0;
+            updatedItems[index].dosage = '';
+            updatedItems[index].total = 0;
+            setItems(updatedItems);
           }
-        }).savePrescription({ bookingId, patientName, mobileNo, prescriptionDate, doctorName, time, items, totalCost });
-      };
-  
-      return (
-        <div className="item-list">
-          <h2>Prescription List</h2>
-          <div className="prescription-header">
-            <div>
-              <label>Booking ID</label>
-              <input type="text" list="booking-ids" value={bookingId} onChange={handleBookingIdChange} />
-              <datalist id="booking-ids">
-                {bookingIds.map((id, index) => <option key={index} value={id} />)}
-              </datalist>
-            </div>
-            <div>
-              <label>Patient Name</label>
-              <input type="text" value={patientName} readOnly />
-            </div>
-            <div>
-              <label>Mobile Number</label>
-              <input type="text" value={mobileNo} readOnly />
-            </div>
-            <div>
-              <label>Prescription Date</label>
-              <input type="date" value={prescriptionDate} readOnly />
-            </div>
-            <div>
-              <label>Time</label>
-              <input type="text" value={time} readOnly />
-            </div>
-            <div>
-              <label>Doctor Name</label>
-              <input type="text" value={doctorName} readOnly />
-            </div>
+        }).getPillData(value);
+      } else if (field === 'quantity') {
+        updatedItems[index].total = updatedItems[index].quantity * updatedItems[index].unitPrice;
+        setItems(updatedItems);
+      }
+    };
+
+    const addItem = () => {
+      setItems([...items, { pillName: '', quantity: 1, unitPrice: 0, dosage: '', total: 0 }]);
+    };
+
+    const removeItem = (index) => {
+      const updatedItems = items.filter((_, i) => i !== index);
+      setItems(updatedItems);
+    };
+
+    const handleSavePrescription = () => {
+      google.script.run.withSuccessHandler((response) => {
+        if (response.success) {
+          alert('Prescription saved successfully!');
+        } else {
+          alert('Error saving prescription.');
+        }
+      }).savePrescription({ bookingId, patientName, mobileNo, prescriptionDate, doctorName, time, items, totalCost });
+    };
+
+    return (
+      <div className="item-list">
+        <h2>Prescription List</h2>
+        <div className="prescription-header">
+          <div>
+            <label>Booking ID</label>
+            <input type="text" list="booking-ids" value={bookingId} onChange={handleBookingIdChange} />
+            <datalist id="booking-ids">
+              {bookingIds.map((id, index) => <option key={index} value={id} />)}
+            </datalist>
           </div>
-          <div className="items-table">
-            <table>
-              <thead>
-                <tr>
-                  <th>Pill Name</th>
-                  <th>Quantity</th>
-                  <th>Unit Price</th>
-                  <th>Dosage</th>
-                  <th>Total</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {items.map((item, index) => (
-                  <tr key={index}>
-                    <td>
-                      <input type="text" list="pill-names" value={item.pillName} onChange={(e) => handleItemChange(index, 'pillName', e.target.value)} />
-                      <datalist id="pill-names">
-                        {pillNames.map((name, idx) => <option key={idx} value={name} />)}
-                      </datalist>
-                    </td>
-                    <td>
-                      <input type="number" value={item.quantity} onChange={(e) => handleItemChange(index, 'quantity', parseFloat(e.target.value) || 0)} />
-                    </td>
-                    <td>
-                      <input type="number" value={item.unitPrice} readOnly />
-                    </td>
-                    <td>
-                      <input type="text" value={item.dosage} readOnly />
-                    </td>
-                    <td>{item.total.toFixed(2)}</td>
-                    <td><button onClick={() => removeItem(index)}>Remove</button></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <button onClick={addItem}>Add Item</button>
+          <div>
+            <label>Patient Name</label>
+            <input type="text" value={patientName} readOnly />
           </div>
-          <div className="invoice-footer">
-            <div>Total Cost: {totalCost.toFixed(2)}</div>
-            <button onClick={handleSavePrescription} className="mt-4 bg-secondary text-white py-2 px-4 rounded">Save Prescription</button>
+          <div>
+            <label>Mobile Number</label>
+            <input type="text" value={mobileNo} readOnly />
+          </div>
+          <div>
+            <label>Prescription Date</label>
+            <input type="date" value={prescriptionDate} readOnly />
+          </div>
+          <div>
+            <label>Time</label>
+            <input type="text" value={time} readOnly />
+          </div>
+          <div>
+            <label>Doctor Name</label>
+            <input type="text" value={doctorName} readOnly />
           </div>
         </div>
-      );
-    };
-  </script>
-  
+        <div className="items-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Pill Name</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Dosage</th>
+                <th>Total</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.map((item, index) => (
+                <tr key={index}>
+                  <td>
+                    <input type="text" list="pill-names" value={item.pillName} onChange={(e) => handleItemChange(index, 'pillName', e.target.value)} />
+                    <datalist id="pill-names">
+                      {pillNames.map((name, idx) => <option key={idx} value={name} />)}
+                    </datalist>
+                  </td>
+                  <td>
+                    <input type="number" value={item.quantity} onChange={(e) => handleItemChange(index, 'quantity', parseFloat(e.target.value) || 0)} />
+                  </td>
+                  <td>
+                    <input type="number" value={item.unitPrice} readOnly />
+                  </td>
+                  <td>
+                    <input type="text" value={item.dosage} readOnly />
+                  </td>
+                  <td>{item.total.toFixed(2)}</td>
+                  <td><button onClick={() => removeItem(index)}>Remove</button></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <button onClick={addItem}>Add Item</button>
+        </div>
+        <div className="invoice-footer">
+          <div>Total Cost: {totalCost.toFixed(2)}</div>
+          <button onClick={handleSavePrescription} className="mt-4 bg-secondary text-white py-2 px-4 rounded">Save Prescription</button>
+        </div>
+      </div>
+    );
+  };
+</script>

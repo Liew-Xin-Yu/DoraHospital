@@ -1,97 +1,80 @@
 <script type="text/babel">
-    const History = () => {
-const [appointments, setAppointments] = useState([]);
-  const [userEmail, setUserEmail] = useState('');
+  const History = () => {
 
-  // Fetch user email from Google Apps Script
-  useEffect(() => {
-    google.script.run.withSuccessHandler((email) => {
-      setUserEmail(email);
-    }).getUserEmail();
-  }, []);
+    const appointments = [
+      { date: 'Feb 24, 10 am', symptoms: 'Back Pain', category: 'Follow-up', doctor: 'Dr. David Brown', status: 'Pending' },
+      { date: 'Feb 21, 11 am', symptoms: 'Headache', category: 'Check-up', doctor: 'Dr. John Smith', status: 'Done' },
+      { date: 'Feb 11, 11 am', symptoms: 'Leg Pain', category: 'Check-up', doctor: 'Dr. Calara', status: 'Done' }
+    ];
 
+    const medicalRecords = [
+      { date: 'Feb 12, 2022', symptoms: 'Back Pain', specialist: 'Dr. Courtney Henry', invoiceNumber: 'INV-001' },
+      { date: 'Feb 13, 2022', symptoms: 'Back Pain', specialist: 'Dr. Robert Fox', invoiceNumber: 'INV-002' },
+      { date: 'Feb 14, 2022', symptoms: 'Back Pain', specialist: 'Dr. Floyd Miles', invoiceNumber: 'INV-003' },
+      { date: 'Feb 15, 2022', symptoms: 'Back Pain', specialist: 'Dr. Darrell Steward', invoiceNumber: 'INV-004' }
+    ];
 
-useEffect(() => {
-  // Fetch the user email from Google Script
-  google.script.run.withSuccessHandler((email) => {
-    setUserEmail(email);
-    // After email is set, fetch appointments related to this email
-    google.script.run.withSuccessHandler((data) => {
-      setAppointments(data);
-    }).getAppointmentsByEmail(email);
-  }).getUserEmail();
-}, []);
+    return (
+      <div className="px-8 pb-8 grid grid-cols-1 lg:grid-cols-2 gap-8 h-auto bg-gray-100">
 
-
-
-      const medicalRecords = [
-        { date: 'Feb 12, 2022', symptoms: 'Back Pain', specialist: 'Dr. Courtney Henry', invoiceNumber: 'INV-001' },
-        { date: 'Feb 13, 2022', symptoms: 'Back Pain', specialist: 'Dr. Robert Fox', invoiceNumber: 'INV-002' },
-        { date: 'Feb 14, 2022', symptoms: 'Back Pain', specialist: 'Dr. Floyd Miles', invoiceNumber: 'INV-003' },
-        { date: 'Feb 15, 2022', symptoms: 'Back Pain', specialist: 'Dr. Darrell Steward', invoiceNumber: 'INV-004' }
-      ];
-
-      return (
-        <div className="px-8 pb-8 grid grid-cols-1 lg:grid-cols-2 gap-8 h-auto bg-gray-100">
-
-            <div className="paper-card">
-              <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Upcoming Appointments</h2>
-              <table className="min-w-full bg-white">
-                <thead >
-                  <tr className="bg-secondary text-gray-600 uppercase text-sm leading-normal">
-                    <th className="py-3 px-6 text-left">Date</th>
-                    <th className="py-3 px-6 text-left">Symptoms</th>
-                    <th className="py-3 px-6 text-left">Category</th>
-                    <th className="py-3 px-6 text-left">Doctor</th>
-                    <th className="py-3 px-6 text-left">Status</th>
+          <div className="paper-card">
+            <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Upcoming Appointments</h2>
+            <table className="min-w-full bg-white">
+              <thead >
+                <tr className="bg-secondary text-gray-600 uppercase text-sm leading-normal">
+                  <th className="py-3 px-6 text-left">Date</th>
+                  <th className="py-3 px-6 text-left">Symptoms</th>
+                  <th className="py-3 px-6 text-left">Category</th>
+                  <th className="py-3 px-6 text-left">Doctor</th>
+                  <th className="py-3 px-6 text-left">Status</th>
+                </tr>
+              </thead>
+              <tbody className="text-gray-600 text-sm font-light">
+                {appointments.map((appointment, index) => (
+                  <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
+                    <td className="py-3 px-6 text-left whitespace-nowrap">{appointment.date}</td>
+                    <td className="py-3 px-6 text-left">{appointment.symptoms}</td>
+                    <td className="py-3 px-6 text-left">{appointment.category}</td>
+                    <td className="py-3 px-6 text-left">{appointment.doctor}</td>
                   </tr>
-                </thead>
-                <tbody className="text-gray-600 text-sm font-light">
-                  {appointments.map((appointment, index) => (
-                    <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
-                      <td className="py-3 px-6 text-left whitespace-nowrap">{appointment.date}</td>
-                      <td className="py-3 px-6 text-left">{appointment.symptoms}</td>
-                      <td className="py-3 px-6 text-left">{appointment.category}</td>
-                      <td className="py-3 px-6 text-left">{appointment.doctor}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-     
-       <div className="bg-white p-4 rounded-lg shadow-md">
-  <div className="flex justify-between items-center mb-4">
-    <h2 className="text-2xl font-bold">Medical Records</h2>
-    <button className="bg-primary text-white py-2 px-4 rounded flex items-center">
-      All Record
-    </button>
-  </div>
-  <div className="divide-y divide-gray-200">
-    {medicalRecords.map((record, index) => (
-      <div key={index} className="py-4 flex justify-between items-center hover:bg-gray-100">
-        <div className="w-1/4">
-          <p className="text-gray-500">Date</p>
-          <p className="font-semibold">{record.date}</p>
-        </div>
-        <div className="w-1/4">
-          <p className="text-gray-500">Symptoms</p>
-          <p className="font-semibold">{record.symptoms}</p>
-        </div>
-        <div className="w-1/4">
-          <p className="text-gray-500">Specialist</p>
-          <p className="font-semibold">{record.specialist}</p>
-        </div>
-        <div className="w-1/4">
-          <p className="text-gray-500">Invoice Number</p>
-          <p className="font-semibold">{record.invoiceNumber}</p>
-        </div>
+                ))}
+              </tbody>
+            </table>
+          </div>
+   
+     <div className="bg-white p-4 rounded-lg shadow-md">
+<div className="flex justify-between items-center mb-4">
+  <h2 className="text-2xl font-bold">Medical Records</h2>
+  <button className="bg-primary text-white py-2 px-4 rounded flex items-center">
+    All Record
+  </button>
+</div>
+<div className="divide-y divide-gray-200">
+  {medicalRecords.map((record, index) => (
+    <div key={index} className="py-4 flex justify-between items-center hover:bg-gray-100">
+      <div className="w-1/4">
+        <p className="text-gray-500">Date</p>
+        <p className="font-semibold">{record.date}</p>
       </div>
-    ))}
-  </div>
+      <div className="w-1/4">
+        <p className="text-gray-500">Symptoms</p>
+        <p className="font-semibold">{record.symptoms}</p>
+      </div>
+      <div className="w-1/4">
+        <p className="text-gray-500">Specialist</p>
+        <p className="font-semibold">{record.specialist}</p>
+      </div>
+      <div className="w-1/4">
+        <p className="text-gray-500">Invoice Number</p>
+        <p className="font-semibold">{record.invoiceNumber}</p>
+      </div>
+    </div>
+  ))}
+</div>
 </div>
 
-     
-        </div>
-      );
-    };  
-    </script>
+   
+      </div>
+    );
+  };  
+  </script>
