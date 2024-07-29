@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <br>
+  <title>Patient Details</title>
+  <?!= include('JavaScript'); ?>  <!-- See JavaScript.html file -->
+  <?!= include('Css'); ?>  <!-- See JavaScript.html file -->
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-5">
+        <?!= include('FormPatientDetails'); ?>
+      </div>
+      <div class="col-lg-7">
+        <?!= include('ViewPatientTable'); ?>
+      </div>
+    </div>
+  </div>
+  <?!= include('SpinnerModal'); ?>
+</body>
+
+</html>
