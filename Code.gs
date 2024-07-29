@@ -137,19 +137,15 @@ const userFeedback = (form) => {
   return { success: true, message: 'Feedback successful' };
 };
 
+//booking to sheet, gmail, calendar
 const userBooking = (form) => {
   const data = bookingSheet.getDataRange().getValues();
   const lastRow = data.length;
   const lastID = lastRow > 1 ? data[lastRow - 1][0] : 0;
   const incrementID = (lastID) => {
-  // Extract prefix and numeric part
     const prefix = lastID.match(/[A-Z]+/)[0]; // Extracts the alphabet part
     const numericPart = lastID.match(/\d+$/)[0]; // Extracts the numeric part
-
-  // Convert numeric part to number, increment it, and format with leading zeros
     const newNumericPart = (parseInt(numericPart, 10) + 1).toString().padStart(numericPart.length, '0');
-
-  // Return the new ID
     return prefix + newNumericPart;
     };
   const newID = incrementID(lastID);
